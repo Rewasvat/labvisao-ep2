@@ -56,10 +56,11 @@ def extractFeatures(img):
 
 ###################################################
 class DataSet:
-    def __init__(self, path, trainingPercentage, featureExtractor):
+    def __init__(self, path, trainingPercentage, randomTrainingSet, featureExtractor):
         self.path = path
         self.featureExtractor = featureExtractor
         self.tp = trainingPercentage
+        self.rts = randomTrainingSet
         self.classes = {}
         self.classNames = []
         
@@ -81,7 +82,7 @@ class DataSet:
         for c in self.classes.values():
             mark = time()
             # separate training set from class image set
-            c.generateTrainingSet(self.tp)
+            c.generateTrainingSet(self.tp, self.rts)
             # generate vocabulary
             c.calculateClusters(self)
             
@@ -107,9 +108,13 @@ class DataClass:
     def size(self):
         return len(self.indexes)
         
-    def generateTrainingSet(self, percentage):
+    def generateTrainingSet(self, percentage, isRandom):
+        if isRandom:
+            random.shuffle(self.indexes)
         self.trainIndexes = self.indexes[:int(len(self.indexes)*percentage)]
         del self.indexes[:int(len(self.indexes)*percentage)]
+        self.indexes.sort()
+        self.trainIndexes.sort()
         return self.trainIndexes
         
     def popRandomSample(self):
@@ -138,34 +143,65 @@ class DataClass:
         
 
 class Classifier:
-    def __init__(self, algorithm):
+    def __init__(self, algorithm, stateFile):
         self.cla = algorithm
+        self.stateFile = stateFile
         
     def train(self, data):
-        values, labels = data.getTrainingData()
-        print "VALUES", values.shape, values.dtype
-        print "LABELS", labels.shape, labels.dtype
-        self.cla.train( values, labels )
+        runTrain = True
+        if self.stateFile != "":
+            try:
+                classifier.cla.load(self.stateFile)
+                runTrain = False
+            except:
+                print "ERROR: Could not save classifier to file..."
+        if runTrain:
+            values, labels = data.getTrainingData()
+            self.cla.train( values, labels )
         
-    def test(self, data):
-        #TODO: improve
+    def runTests(self, data, testsPerClass):
+        results = {}
         for c in data.classes.values():
-            print "Checking class %s (%s)" % (c.name, c.label)
+            print "Checking class %s (label %s)" % (c.name, c.label)
             oks = 0
-            for bla in xrange(10):
+            for bla in xrange(testsPerClass):
                 sample = c.popRandomSample()
                 value = c.getImageDescriptor( sample, data)
-                #find_nearest(samples, k[, results[, neighborResponses[, dists]]]) -> retval, results, neighborResponses, dists
-                response, results, neighborResponsers, dists = self.cla.find_nearest( value, 5 )
-                
-                #print "\tretval =", retval
-                #print "\tresults =", results
-                #print "\tneighborResponsers =", neighborResponsers
-                #print "\tdists =", dists
-                print "[%s] Testing file %s -> %s" % (response==c.label, c.name+"_"+str(sample), data.classNames[int(response)])
-                oks += int(response==c.label)
-            print "TEST FOR CLASS %s RESULTS: %s/%s" % (c.name, oks, 10)
+
+                response = self.predict(value)
+                check = response == c.label
+                oks += int(check)
+                print "\t[%s] Testing file %s -> %s" % ("OK" if check else "--", c.name+"_"+str(sample), data.classNames[int(response)])
+            results[c.name] = oks   
+            print "\tFinal Results: %s/%s" % (oks, testsPerClass)
+        return results
+            
+    def save(self, filename):
+        try:
+            self.cla.save(filename)
+        except:
+            print "ERROR: Could not save classifier to file..."
+            
+    def predict(self, sample):
+        print "WARNING: this should be overwritten in subclasses..."
+        return self.cla.predict(sample)
+            
                   
+class KNNClassifier(Classifier):
+    def __init__(self, stateFile):
+        Classifier.__init__(self, cv2.KNearest(), stateFile)
+        
+    def predict(self, sample):
+        response, results, neighborResponsers, dists = self.cla.find_nearest(sample, 5 )
+        return response
+        
+class SVMClassifier(Classifier):
+    def __init__(self, stateFile):
+        Classifier.__init__(self, cv2.SVM(), stateFile)
+        
+    def predict(self, sample):
+        return self.cla.predict(sample)
+    
 ###################################################
 
 ######################################################################################################
@@ -181,13 +217,30 @@ if __name__ == '__main__':
         if tp < 0:  return 0.0
         elif tp > 1.0:  return 1.0
         return tp
-    parser.add_argument("--trainingPercentage", "-tp", type=tpType, default=0.1, help="Threshold percentage of samples in each class to use for training.")
-    parser.add_argument("--load", "-l", action="store_true", default=False, help="BLABLABLA")
+    parser.add_argument("--trainingPercentage", "-tp", type=tpType, default=0.1, help="Threshold percentage of samples in each class to use for training. (default 0.1)")
+    parser.add_argument("--testsPerClass", "-tpc", type=int, default=10, help="Number of tests per class to run. (default 10)")
+    parser.add_argument("--load", "-l", action="store_true", default=False, help="If we should try to load classifier state from state file. (default no)")
+    parser.add_argument("--save", "-s", action="store_true", default=False, help="If we should try to save classifier state to state file. (default no)")
+    parser.add_argument("--stateFile", "-sf", default="", help="Name of the state file to save/load. (default classfierState)")
+    parser.add_argument("--randomTrainingSet", "-rts", action="store_true", default=False, help="If the training set should be defined from random samples from each class from dataset. If not, " +
+        "training set will be the first X samples from each class. (default not)")
+    claOptions = ["KNN", "SVM"]
+    parser.add_argument("--classifier", "-c", choices=claOptions, default=claOptions[0], help="Which classifier to use. (default KNN)")
+    extractOptions = ["SIFT", "SURF"]
+    parser.add_argument("--extractor", "-e", choices=extractOptions, default=extractOptions[0], help="Which feature extractor to use. (default SIFT)")
+    
+    #qual classifier
 
     args = parser.parse_args()
         
-    data = DataSet(args.datapath, args.trainingPercentage, cv2.SIFT())
-    classifier = Classifier( cv2.KNearest() )
+    if args.extractor == "SIFT":
+        extractor = cv2.SIFT()
+    elif args.extractor == "SURF":
+        extractor = cv2.SURF(400)
+    data = DataSet(args.datapath, args.trainingPercentage, args.randomTrainingSet, extractor)
+    
+    stateFile = (args.stateFile if args.stateFile != "" else "classifierState") if args.load else ""
+    classifier = KNNClassifier( stateFile )
     
     total = 0.0
     mark = time()
@@ -197,21 +250,20 @@ if __name__ == '__main__':
     print "Dataset carregado em %.2f secs." % (stepTime)
     
     mark = time()
-    if args.load:
-        classifier.cla.load("./classifiersave")
-    else:
-        classifier.train(data)
-        try:
-            classifier.cla.save("./classifiersave")
-        except:
-            print "ERROR: Could not save classifier to file..."
+    classifier.train(data)
+    if args.save:
+        classifier.save(args.stateFile if args.stateFile != "" else "classifierState")
     stepTime = time()-mark
     total += stepTime
     print "Classificador treinado em %.2f secs." % (stepTime)
     
     mark = time()
-    classifier.test(data)
+    results = classifier.runTests(data, args.testsPerClass)
     stepTime = time()-mark
     total += stepTime
     print "Testes rodados em %.2f secs." % (stepTime)
     print "Execução total levou %.2f secs" % (total) 
+    
+    print "\nResultados dos testes:"
+    for className, hits in results.items():
+        print "\t%s: %s of %s tests passed (%.1f%%)" % (className, hits, args.testsPerClass, 100*hits/args.testsPerClass)
