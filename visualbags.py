@@ -40,7 +40,7 @@ class ProgressBar:
     def __str__(self):
         s = self.text + ": ["
         p = self.currentWork/self.totalWork
-        elapsed = time()-mark
+        elapsed = time()-self.mark
         estimated = elapsed * ( (self.totalWork/self.currentWork) - 1 )
         timeText = "] (%.2f secs | %.2f secs)" % (elapsed, estimated)
         barSize = getConsoleWidth() - len(s) - len(timeText)
