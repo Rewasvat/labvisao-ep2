@@ -1,0 +1,142 @@
+\input texbase
+
+\titulo{Exercício Programa 2}
+\materia{MAC5915 - Laboratório de Visão Computacional e Processamento de Imagens}
+
+\aluno{Fernando Omar Aluani}{6797226}
+
+\begin{document}
+\cabecalho
+
+%===================================================================================
+
+\section{Funcionamento do Algoritmo}
+Nessa seção irei explicar como funciona o algoritmo de categorização visual usando 
+\textit{bags of keypoints} que implementei, baseado na descrição desse algoritmo no
+artigo contido no PACA. Dividi ele em duas grandes partes,
+treinamento e testes, e cada uma trata de uma parte do \textit{dataset}.
+
+%----------------------------------------------------------------------
+\subsection{Treinamento}
+O treinamento é a primeira parte do algoritmo a ser executada. Ele retira um conjunto
+de imagens de cada classe do dataset e usa essas imagens para o treinamento. Isso se dá em algumas etapas, em ordem:
+
+\subsubsection{Calcula Keypoints}
+Primeiramente, o programa calcula os keypoints (descritores) de cada imagem de treinamento. A qual classe
+elas pertencem não importa nessa etapa. Ele pode usar SIFT ou SURF para isso. Os descritores são
+vetores (128-dimensional no caso do SIFT) de números.
+
+\subsubsection{Clusterização}
+Após calcular os keypoints, o programa usa o algoritmo de KMEANS para clusterizar os keypoints
+em K clusters (por padrão, 1000). Essa é a etapa que usualmente leva mais tempo para ser executada,
+e ela gera os pontos que identificam os clusters: os pontos centrais deles. Cada um desses pontos tem
+a mesma dimensão dos keypoints.
+
+\subsubsection{Criação do Vocabulário}
+A terceira etapa cria o ``vocabulário'', que iremos usar nas próximas etapas. Ele consiste em um
+classificador K-NEAREST-NEIGHBOUR (KNN), treinado com os centros dos clusters, sendo que cada
+centro recebe um rótulo diferente.
+
+\subsubsection{Calcula Histogramas}
+Para cada imagem de treinamento o algoritmo recalcula os descritores, e com a ajuda do KNN do vocabulário,
+descobre quais são os clusters em que os descritores estão mais próximos. Com isso ele constrói um
+histograma para cada imagem que diz em quais clusters os descritores ``cairam''.
+
+\subsubsection{treina classificador com histogramas}
+Finalmente, o programa usa os histogramas calculados anteriormente, e os dados de para qual 
+classe do dataset cada um deles pertence, e usa isso para treinar um classificador, que pode
+ser KNN ou Support Vector Machines (SVM). Este é o classificador que categoriza imagens, e será
+usado nos testes.
+
+%----------------------------------------------------------------------
+\subsection{Testes}
+Depois da etapa de treinamento, as imagens do dataset (ou um subconjunto delas) que sobraram 
+são usadas para testes. Essa parte é bem simples: para cada imagem de teste, seu histograma
+é calculado e passado para o classificador para obter sua classificação. Comparo a resposta
+do classificador com a classe real da imagem e então o programa mostra a porcentagem de
+acerto do classificador em cada classe.
+
+%===================================================================================
+\section{Implementação}
+Eu implementei o algoritmo em \emph{Python}, na forma de um script que pode ser executado
+como um programa na linha de comando ou importado por outro script como uma biblioteca.
+
+Algoritmos já conhecidos como KMEANS, SIFT, SURF, KNN e SVM eu usei implementações prontas
+da biblioteca \emph{OpenCV}.
+
+\subsection{Dataset}
+O programa assume que o dataset é passado de um jeito bem específico para ele: como o caminho para
+uma pasta onde estão contidas TODAS imagens do dataset. Note que a pasta do dataset 
+deve conter todas imagens nela - subpastas contidas dentro do dataset serão ignoradas ou 
+poderão dar erro no script (não testei esse caso).
+
+Outra suposição que ele faz com o dataset é que todas imagens são salvas em formato \emph{.jpg},
+seguindo o seguinte formato de nomeação:
+\begin{verbatim}
+     <nome_da_classe>_<indice>.jpg
+\end{verbatim}
+Exemplos: 
+\begin{verbatim}
+classe_A_1.jpg, classe_A_2.jpg, algum_nome_de_classe_10.jpg...
+\end{verbatim}
+
+Isso se deve a minha escolha de deixar esse aspecto do programa mais voltado ao dataset
+que usei para testar.
+
+\subsubsection{Divisão do Dataset}
+Outro fato importante é como ele divide as imagens do dataset para treinamento e testes.
+Por padrão, ele ordena as imagens de cada classe de acordo com seus índices, e então usa as 
+primeiras \textbf{X\%} imagens de cada classe como treinamento, onde X é um parametro passado pelo usuário.
+
+Também é possível, por meio de outro paramêtro, que ele busque as imagens de treinamento aleatoriamente.
+Nesse caso, ele ainda separa X\% imagens de cada classe para treinamento, mas em vez de pegar as
+primeiras, o programa pega elas aleatoriamente dentre as imagens da classe.
+
+Para o teste, são escolhidas \textbf{N} imagens de cada classe aleatóriamente, dentre as imagens que
+sobraram depois do treinamento. Uma imagem nunca será escolhida para treinamento e teste simultaneamente,
+e também nunca será escolhida duas vezes para a mesma etapa.
+
+%----------------------------------------------------------------------
+\subsection{Execução}
+Para executar o script é necessário Python versão $2.7$ ou mais (mas não versão 3 ou mais),
+OpenCV (para python) e a biblioteca de python \emph{NumPy} instaladas. Essas bibliotecas são
+fáceis de encontrar e instalar em diversas plataformas.
+
+Com tudo necessário instalado, para rodar o script basta executá-lo na linha de comando.
+Passando o parametro \textbf{--help} irá mostrar a ajuda do programa, listando todos 
+parametros possíveis, o que eles fazem e valores padrão.
+
+%===================================================================================
+\section{Resultados}
+Aqui irei mostrar alguns dos resultados do programa. O dataset que usei foi um de
+animais de estimação\footnote{
+Seguindo uma indicação do artigo, peguei esse dataset em http://www.robots.ox.ac.uk/~vgg/data/pets/.
+Ele continha originalmente 37 classes de animais. Eu removi várias classes para simplificar o dataset
+para meus testes.
+} que contém 10 classes de animais (raças de cachorros),
+sendo que cada classe tem aproximadamente 200 imagens coloridas com resoluções entre
+200 e 500 pixels em cada eixo.
+
+Nos testes usei esse dataset em duas formas:
+\begin{enumerate}
+  \item \textbf{Dataset Total}: Ele completo (as 10 classes).
+  \item \textbf{Mini Dataset}: um subconjunto de 3 das 10 classes do dataset. Ainda com as mesmas imagens.
+\end{enumerate}
+
+
+\section{Tempos de execução}
+\begin{tabular}{ | l | c | c | c | c | c | r | }
+\hline
+Teste       & Leitura & Etapa 1 & Etapa 2 & Etapa 3 & Etapa 4 & Total \\
+\hline
+\ref{errado} & 0.08 & N/A & 5.19 & 10.00 & 8.24 & 23.51 \\
+\hline
+\ref{duasplacas} & 0.07 & N/A & 4.85 & 9.30 & 8.01 & 22.23 \\
+\hline
+\ref{comenhance} & 0.07 & 31.41 & 4.52 & 8.86 & 8.86 & 53.73 \\
+\hline
+\ref{semenhance} & 0.0 & N/A & 4.38 & 8.73 & 7.59 & 20.70 \\
+\hline
+\end{tabular}
+
+\end{document}

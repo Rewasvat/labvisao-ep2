@@ -139,6 +139,7 @@ class DataClass:
         return self.trainIndexes
         
     def popRandomSample(self):
+        if len(self.indexes) == 0:  return None
         sample = random.choice(self.indexes)
         self.indexes.remove(sample)
         return sample
@@ -185,14 +186,14 @@ class Classifier:
         
     def train(self, data):
         runTrain = True
+        values, labels = data.getTrainingData()
         if self.stateFile != "":
             try:
                 classifier.cla.load(self.stateFile)
                 runTrain = False
             except:
-                print "ERROR: Could not save classifier to file..."
+                print "ERROR: Could not load classifier from file..."
         if runTrain:
-            values, labels = data.getTrainingData()
             self._doTrain( values, labels )
         
     def runTests(self, data, testsPerClass):
@@ -200,16 +201,19 @@ class Classifier:
         for c in data.classes.values():
             print "Checking class %s (label %s)" % (c.name, c.label)
             oks = 0
+            testsRun = 0
             for bla in xrange(testsPerClass):
                 sample = c.popRandomSample()
+                if sample == None:
+                    break
                 value = c.getImageHistogram(sample, data)
-
+                testsRun += 1
                 response = self.predict(value)
                 check = response == c.label
                 oks += int(check)
                 print "\t[%s] Testing file %s -> %s" % ("OK" if check else "--", c.name+"_"+str(sample), data.classNames[int(response)])
-            results[c.name] = oks   
-            print "\tFinal Results: %s/%s" % (oks, testsPerClass)
+            results[c.name] = (oks, testsRun)
+            print "\tFinal Results: %s/%s" % (oks, testsRun)
         return results
             
     def save(self, filename):
@@ -311,5 +315,5 @@ if __name__ == '__main__':
     print "Execução total levou %.2f secs" % (total) 
     
     print "\nResultados dos testes:"
-    for className, hits in results.items():
-        print "\t%s: %s of %s tests passed (%.1f%%)" % (className, hits, args.testsPerClass, 100*hits/args.testsPerClass)
+    for className, res in results.items():
+        print "\t%s: %s of %s tests passed (%.1f%%)" % (className, res[0], res[1], 100*res[0]/res[1])
