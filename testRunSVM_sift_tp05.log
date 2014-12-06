@@ -1,0 +1,267 @@
+./visualbags.py -c SVM -e SIFT -tp 0.5 -tpc 80 ../minidataset/
+
+========================================================================
+
+Dataset carregado em 0.03 secs.
+Calculated descriptors for beagle (26.35 secs)
+Calculated descriptors for great_pyrenees (26.96 secs)
+Calculated descriptors for saint_bernard (27.64 secs)
+Generated clusters (vocabulary) in 1169.20 secs
+Created bag of visual words from clusters in 0.08 secs
+Pegando Histogramas de beagle: [==========================================================================================================================================================] (38.27 secs | 0.00 secs)
+Pegando Histogramas de great_pyrenees: [==================================================================================================================================================] (37.03 secs | 0.00 secs)
+Pegando Histogramas de saint_bernard: [===================================================================================================================================================] (37.02 secs | 0.00 secs)
+Classificador treinado em 1362.74 secs.
+Checking class beagle (label 2)
+	[OK] Testing file beagle_197 -> beagle
+	[OK] Testing file beagle_135 -> beagle
+	[--] Testing file beagle_113 -> saint_bernard
+	[--] Testing file beagle_171 -> saint_bernard
+	[OK] Testing file beagle_161 -> beagle
+	[--] Testing file beagle_127 -> saint_bernard
+	[OK] Testing file beagle_201 -> beagle
+	[OK] Testing file beagle_151 -> beagle
+	[OK] Testing file beagle_118 -> beagle
+	[OK] Testing file beagle_160 -> beagle
+	[OK] Testing file beagle_117 -> beagle
+	[OK] Testing file beagle_121 -> beagle
+	[--] Testing file beagle_175 -> great_pyrenees
+	[OK] Testing file beagle_203 -> beagle
+	[--] Testing file beagle_134 -> saint_bernard
+	[--] Testing file beagle_154 -> saint_bernard
+	[OK] Testing file beagle_194 -> beagle
+	[--] Testing file beagle_195 -> great_pyrenees
+	[OK] Testing file beagle_199 -> beagle
+	[OK] Testing file beagle_137 -> beagle
+	[--] Testing file beagle_182 -> saint_bernard
+	[--] Testing file beagle_107 -> great_pyrenees
+	[--] Testing file beagle_164 -> great_pyrenees
+	[--] Testing file beagle_145 -> great_pyrenees
+	[OK] Testing file beagle_204 -> beagle
+	[OK] Testing file beagle_115 -> beagle
+	[--] Testing file beagle_176 -> saint_bernard
+	[OK] Testing file beagle_158 -> beagle
+	[--] Testing file beagle_200 -> saint_bernard
+	[OK] Testing file beagle_110 -> beagle
+	[OK] Testing file beagle_149 -> beagle
+	[--] Testing file beagle_128 -> saint_bernard
+	[OK] Testing file beagle_166 -> beagle
+	[OK] Testing file beagle_147 -> beagle
+	[OK] Testing file beagle_136 -> beagle
+	[OK] Testing file beagle_138 -> beagle
+	[--] Testing file beagle_125 -> great_pyrenees
+	[OK] Testing file beagle_112 -> beagle
+	[OK] Testing file beagle_168 -> beagle
+	[--] Testing file beagle_174 -> saint_bernard
+	[--] Testing file beagle_140 -> great_pyrenees
+	[OK] Testing file beagle_105 -> beagle
+	[OK] Testing file beagle_114 -> beagle
+	[--] Testing file beagle_187 -> saint_bernard
+	[OK] Testing file beagle_183 -> beagle
+	[OK] Testing file beagle_163 -> beagle
+	[--] Testing file beagle_193 -> saint_bernard
+	[OK] Testing file beagle_196 -> beagle
+	[OK] Testing file beagle_122 -> beagle
+	[OK] Testing file beagle_156 -> beagle
+	[--] Testing file beagle_142 -> great_pyrenees
+	[OK] Testing file beagle_181 -> beagle
+	[OK] Testing file beagle_130 -> beagle
+	[OK] Testing file beagle_192 -> beagle
+	[--] Testing file beagle_167 -> saint_bernard
+	[OK] Testing file beagle_120 -> beagle
+	[--] Testing file beagle_157 -> saint_bernard
+	[OK] Testing file beagle_141 -> beagle
+	[OK] Testing file beagle_189 -> beagle
+	[OK] Testing file beagle_108 -> beagle
+	[OK] Testing file beagle_191 -> beagle
+	[--] Testing file beagle_123 -> great_pyrenees
+	[--] Testing file beagle_129 -> great_pyrenees
+	[OK] Testing file beagle_131 -> beagle
+	[OK] Testing file beagle_177 -> beagle
+	[OK] Testing file beagle_198 -> beagle
+	[--] Testing file beagle_180 -> saint_bernard
+	[OK] Testing file beagle_124 -> beagle
+	[--] Testing file beagle_186 -> saint_bernard
+	[--] Testing file beagle_153 -> great_pyrenees
+	[OK] Testing file beagle_170 -> beagle
+	[--] Testing file beagle_126 -> great_pyrenees
+	[--] Testing file beagle_119 -> saint_bernard
+	[OK] Testing file beagle_148 -> beagle
+	[OK] Testing file beagle_103 -> beagle
+	[--] Testing file beagle_188 -> saint_bernard
+	[--] Testing file beagle_179 -> great_pyrenees
+	[--] Testing file beagle_169 -> saint_bernard
+	[--] Testing file beagle_190 -> great_pyrenees
+	[--] Testing file beagle_178 -> saint_bernard
+	Final Results: 46/80
+Checking class great_pyrenees (label 1)
+	[--] Testing file great_pyrenees_180 -> beagle
+	[--] Testing file great_pyrenees_110 -> saint_bernard
+	[--] Testing file great_pyrenees_162 -> beagle
+	[--] Testing file great_pyrenees_155 -> beagle
+	[--] Testing file great_pyrenees_142 -> saint_bernard
+	[OK] Testing file great_pyrenees_104 -> great_pyrenees
+	[OK] Testing file great_pyrenees_175 -> great_pyrenees
+	[--] Testing file great_pyrenees_125 -> saint_bernard
+	[OK] Testing file great_pyrenees_185 -> great_pyrenees
+	[--] Testing file great_pyrenees_159 -> saint_bernard
+	[--] Testing file great_pyrenees_117 -> saint_bernard
+	[--] Testing file great_pyrenees_164 -> saint_bernard
+	[--] Testing file great_pyrenees_158 -> beagle
+	[OK] Testing file great_pyrenees_192 -> great_pyrenees
+	[OK] Testing file great_pyrenees_121 -> great_pyrenees
+	[--] Testing file great_pyrenees_172 -> beagle
+	[OK] Testing file great_pyrenees_135 -> great_pyrenees
+	[OK] Testing file great_pyrenees_134 -> great_pyrenees
+	[OK] Testing file great_pyrenees_133 -> great_pyrenees
+	[OK] Testing file great_pyrenees_183 -> great_pyrenees
+	[--] Testing file great_pyrenees_194 -> beagle
+	[OK] Testing file great_pyrenees_111 -> great_pyrenees
+	[OK] Testing file great_pyrenees_170 -> great_pyrenees
+	[OK] Testing file great_pyrenees_200 -> great_pyrenees
+	[OK] Testing file great_pyrenees_174 -> great_pyrenees
+	[OK] Testing file great_pyrenees_160 -> great_pyrenees
+	[OK] Testing file great_pyrenees_127 -> great_pyrenees
+	[--] Testing file great_pyrenees_181 -> beagle
+	[OK] Testing file great_pyrenees_114 -> great_pyrenees
+	[--] Testing file great_pyrenees_146 -> beagle
+	[OK] Testing file great_pyrenees_119 -> great_pyrenees
+	[--] Testing file great_pyrenees_141 -> beagle
+	[--] Testing file great_pyrenees_138 -> beagle
+	[OK] Testing file great_pyrenees_105 -> great_pyrenees
+	[OK] Testing file great_pyrenees_173 -> great_pyrenees
+	[OK] Testing file great_pyrenees_149 -> great_pyrenees
+	[--] Testing file great_pyrenees_167 -> saint_bernard
+	[--] Testing file great_pyrenees_166 -> saint_bernard
+	[--] Testing file great_pyrenees_177 -> beagle
+	[--] Testing file great_pyrenees_101 -> saint_bernard
+	[--] Testing file great_pyrenees_108 -> saint_bernard
+	[--] Testing file great_pyrenees_122 -> beagle
+	[OK] Testing file great_pyrenees_197 -> great_pyrenees
+	[OK] Testing file great_pyrenees_107 -> great_pyrenees
+	[--] Testing file great_pyrenees_178 -> saint_bernard
+	[OK] Testing file great_pyrenees_151 -> great_pyrenees
+	[--] Testing file great_pyrenees_113 -> saint_bernard
+	[--] Testing file great_pyrenees_179 -> saint_bernard
+	[--] Testing file great_pyrenees_130 -> beagle
+	[--] Testing file great_pyrenees_157 -> saint_bernard
+	[OK] Testing file great_pyrenees_184 -> great_pyrenees
+	[--] Testing file great_pyrenees_136 -> saint_bernard
+	[--] Testing file great_pyrenees_116 -> beagle
+	[--] Testing file great_pyrenees_154 -> saint_bernard
+	[OK] Testing file great_pyrenees_140 -> great_pyrenees
+	[--] Testing file great_pyrenees_161 -> beagle
+	[--] Testing file great_pyrenees_168 -> saint_bernard
+	[OK] Testing file great_pyrenees_126 -> great_pyrenees
+	[OK] Testing file great_pyrenees_182 -> great_pyrenees
+	[--] Testing file great_pyrenees_187 -> beagle
+	[--] Testing file great_pyrenees_143 -> saint_bernard
+	[OK] Testing file great_pyrenees_199 -> great_pyrenees
+	[OK] Testing file great_pyrenees_198 -> great_pyrenees
+	[--] Testing file great_pyrenees_150 -> saint_bernard
+	[OK] Testing file great_pyrenees_137 -> great_pyrenees
+	[--] Testing file great_pyrenees_196 -> saint_bernard
+	[--] Testing file great_pyrenees_145 -> saint_bernard
+	[--] Testing file great_pyrenees_128 -> beagle
+	[--] Testing file great_pyrenees_193 -> saint_bernard
+	[--] Testing file great_pyrenees_124 -> saint_bernard
+	[--] Testing file great_pyrenees_147 -> beagle
+	[OK] Testing file great_pyrenees_120 -> great_pyrenees
+	[--] Testing file great_pyrenees_148 -> saint_bernard
+	[--] Testing file great_pyrenees_106 -> saint_bernard
+	[OK] Testing file great_pyrenees_152 -> great_pyrenees
+	[--] Testing file great_pyrenees_118 -> beagle
+	[--] Testing file great_pyrenees_103 -> beagle
+	[--] Testing file great_pyrenees_169 -> beagle
+	[OK] Testing file great_pyrenees_163 -> great_pyrenees
+	[OK] Testing file great_pyrenees_112 -> great_pyrenees
+	Final Results: 34/80
+Checking class saint_bernard (label 0)
+	[--] Testing file saint_bernard_118 -> beagle
+	[--] Testing file saint_bernard_157 -> beagle
+	[OK] Testing file saint_bernard_102 -> saint_bernard
+	[OK] Testing file saint_bernard_140 -> saint_bernard
+	[OK] Testing file saint_bernard_186 -> saint_bernard
+	[OK] Testing file saint_bernard_132 -> saint_bernard
+	[OK] Testing file saint_bernard_160 -> saint_bernard
+	[--] Testing file saint_bernard_110 -> great_pyrenees
+	[OK] Testing file saint_bernard_112 -> saint_bernard
+	[--] Testing file saint_bernard_192 -> beagle
+	[OK] Testing file saint_bernard_123 -> saint_bernard
+	[OK] Testing file saint_bernard_176 -> saint_bernard
+	[--] Testing file saint_bernard_129 -> beagle
+	[--] Testing file saint_bernard_196 -> beagle
+	[OK] Testing file saint_bernard_104 -> saint_bernard
+	[--] Testing file saint_bernard_185 -> beagle
+	[--] Testing file saint_bernard_111 -> great_pyrenees
+	[--] Testing file saint_bernard_163 -> beagle
+	[OK] Testing file saint_bernard_193 -> saint_bernard
+	[OK] Testing file saint_bernard_153 -> saint_bernard
+	[--] Testing file saint_bernard_101 -> great_pyrenees
+	[OK] Testing file saint_bernard_173 -> saint_bernard
+	[OK] Testing file saint_bernard_121 -> saint_bernard
+	[--] Testing file saint_bernard_167 -> great_pyrenees
+	[OK] Testing file saint_bernard_182 -> saint_bernard
+	[--] Testing file saint_bernard_106 -> great_pyrenees
+	[--] Testing file saint_bernard_122 -> beagle
+	[--] Testing file saint_bernard_200 -> great_pyrenees
+	[OK] Testing file saint_bernard_152 -> saint_bernard
+	[OK] Testing file saint_bernard_184 -> saint_bernard
+	[--] Testing file saint_bernard_161 -> beagle
+	[--] Testing file saint_bernard_125 -> great_pyrenees
+	[--] Testing file saint_bernard_124 -> beagle
+	[OK] Testing file saint_bernard_174 -> saint_bernard
+	[OK] Testing file saint_bernard_150 -> saint_bernard
+	[--] Testing file saint_bernard_171 -> great_pyrenees
+	[OK] Testing file saint_bernard_127 -> saint_bernard
+	[OK] Testing file saint_bernard_103 -> saint_bernard
+	[OK] Testing file saint_bernard_141 -> saint_bernard
+	[OK] Testing file saint_bernard_145 -> saint_bernard
+	[OK] Testing file saint_bernard_149 -> saint_bernard
+	[--] Testing file saint_bernard_137 -> great_pyrenees
+	[OK] Testing file saint_bernard_138 -> saint_bernard
+	[--] Testing file saint_bernard_156 -> beagle
+	[OK] Testing file saint_bernard_119 -> saint_bernard
+	[OK] Testing file saint_bernard_197 -> saint_bernard
+	[--] Testing file saint_bernard_144 -> great_pyrenees
+	[OK] Testing file saint_bernard_109 -> saint_bernard
+	[OK] Testing file saint_bernard_159 -> saint_bernard
+	[OK] Testing file saint_bernard_165 -> saint_bernard
+	[--] Testing file saint_bernard_139 -> great_pyrenees
+	[--] Testing file saint_bernard_147 -> beagle
+	[OK] Testing file saint_bernard_107 -> saint_bernard
+	[--] Testing file saint_bernard_113 -> great_pyrenees
+	[OK] Testing file saint_bernard_117 -> saint_bernard
+	[--] Testing file saint_bernard_180 -> beagle
+	[OK] Testing file saint_bernard_181 -> saint_bernard
+	[OK] Testing file saint_bernard_155 -> saint_bernard
+	[OK] Testing file saint_bernard_187 -> saint_bernard
+	[--] Testing file saint_bernard_179 -> beagle
+	[--] Testing file saint_bernard_142 -> beagle
+	[OK] Testing file saint_bernard_188 -> saint_bernard
+	[--] Testing file saint_bernard_168 -> great_pyrenees
+	[OK] Testing file saint_bernard_105 -> saint_bernard
+	[OK] Testing file saint_bernard_133 -> saint_bernard
+	[OK] Testing file saint_bernard_135 -> saint_bernard
+	[--] Testing file saint_bernard_175 -> beagle
+	[--] Testing file saint_bernard_116 -> great_pyrenees
+	[--] Testing file saint_bernard_190 -> great_pyrenees
+	[OK] Testing file saint_bernard_169 -> saint_bernard
+	[OK] Testing file saint_bernard_148 -> saint_bernard
+	[OK] Testing file saint_bernard_131 -> saint_bernard
+	[OK] Testing file saint_bernard_126 -> saint_bernard
+	[--] Testing file saint_bernard_143 -> great_pyrenees
+	[--] Testing file saint_bernard_120 -> beagle
+	[--] Testing file saint_bernard_199 -> beagle
+	[OK] Testing file saint_bernard_183 -> saint_bernard
+	[OK] Testing file saint_bernard_158 -> saint_bernard
+	[OK] Testing file saint_bernard_172 -> saint_bernard
+	[--] Testing file saint_bernard_151 -> beagle
+	Final Results: 45/80
+Testes rodados em 75.49 secs.
+Execução total levou 1438.25 secs
+
+Resultados dos testes:
+	beagle: 46 of 80 tests passed (57.0%)
+	great_pyrenees: 34 of 80 tests passed (42.0%)
+	saint_bernard: 45 of 80 tests passed (56.0%)

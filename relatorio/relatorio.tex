@@ -115,7 +115,8 @@ Ele continha originalmente 37 classes de animais. Eu removi várias classes para
 para meus testes.
 } que contém 10 classes de animais (raças de cachorros),
 sendo que cada classe tem aproximadamente 200 imagens coloridas com resoluções entre
-200 e 500 pixels em cada eixo.
+200 e 500 pixels em cada eixo. Cada classe tem o nome da raça do cachorro, mas por simplicidade 
+também irei me referir a elas nas próximas páginas por uma letra de A a J, como será mostrado na seção \emph{Tempos de execução}.
 
 Nos testes usei esse dataset em duas formas:
 \begin{enumerate}
@@ -123,20 +124,155 @@ Nos testes usei esse dataset em duas formas:
   \item \textbf{Mini Dataset}: um subconjunto de 3 das 10 classes do dataset. Ainda com as mesmas imagens.
 \end{enumerate}
 
+No total, rodei 6 testes:
+\begin{enumerate}
+  \item \textbf{KNN}: Com o dataset total, usando KNN como classificador e SURF como extrator. 40\% das
+    imagens de cada classe como treinamento (80 imagens de cada classe) e testando com 80 imagens em cada classe.
+  \item \textbf{SVM}: O mesmo que o teste acima, mas com o classificador SVM.
+  \item \textbf{KNN\_sift\_tp05}: Com o mini dataset, usando o KNN como classificador e SIFT como extrator.
+    50\% das imagens de cada classe para treinamento (100 imagens de cada classe) e testando com 80
+    imagens de cada classe.
+  \item \textbf{KNN\_surf\_tp05}: Mesmo que o teste acima, mas com SURF como extrator.
+  \item \textbf{SVM\_sift\_tp05}: Mesmo que o teste acima, mas com classificador SVM e extrator SIFT.
+  \item \textbf{SVM\_surf\_tp05}: Mesmo que o teste acima, mas com extrator SURF.
+\end{enumerate}
 
-\section{Tempos de execução}
-\begin{tabular}{ | l | c | c | c | c | c | r | }
+Todos os testes foram executados na mesma máquina, e como não usei a opção para usar imagens aleatórias 
+para treinamento, eles usaram as mesmas imagens para o treinamento. Note que os testes
+que usaram 50\% de imagens para treinamento usaram as mesmas 40\% dos outros dois testes, e 10\% a mais.
+Todos testes usaram o valor padrão do número de clusters K: 1000.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{beagle_good.jpg}
+    \caption{Um \textit{beagle} (F) }
+  \end{subfigure}
+  ~ 
+  \begin{subfigure}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{saint_bernard_good.jpg}
+    \caption{Um \textit{saint bernard} (E)}
+  \end{subfigure}
+  \caption{Exemplos de imagens que foram corretamente classificadas em todos testes.}
+  \label{fig:perfectgood}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{beagle_bad.jpg}
+    \caption{Um \textit{beagle} (F), classificado como \textit{saint bernard} em 3 testes. }
+  \end{subfigure}
+  ~ 
+  \begin{subfigure}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{saint_bernard_bad.jpg}
+    \caption{Um \textit{saint bernard} (E), classificado como \textit{beagle} em 5 testes. }
+  \end{subfigure}
+  \caption{Exemplos de imagens que foram incorretamente classificadas em todos testes.}
+  \label{fig:perfectbad}
+\end{figure}
+
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.6\textwidth}
+    \includegraphics[width=\textwidth]{great_pyrenees.jpg}
+  \end{subfigure}
+  \caption{Um \textit{great pyrenees} (E), classificado corretamente nos dois testes com dataset mini e SURF, e incorretamente
+      como \textit{saint bernard} nos dois testes com dataset mini e SIFT.}
+  \label{fig:pyrenees}
+\end{figure}
+
+Também notei que, com exceção da classe \textit{great pyrenees} (I), todas as classes tiveram algumas poucas
+imagens que foram corretamente classificadas em todos testes, como as mostradas na figura \ref{fig:perfectgood}.
+Por outro lado, todas classes tiveram várias imagens que foram incorretamente classificadas em todos testes, tendo
+alguns exemplos na figura \ref{fig:perfectbad}. Como
+dos seis testes só dois deles testaram com as 10 classes, os exemplos de imagem que mostrarei são das 3 classes
+que foram usadas em todos testes pois elas são mais representativas. 
+
+Outro exemplo curioso é o da figura \ref{fig:pyrenees}. Essa imagem foi corretamente classificada nos dois testes
+com dataset mini e extrator SURF, mas foi incorretamente classificada como \textit{saint bernard} nos dois testes
+com dataset mini e extrator SIFT. No teste com dataset total e classificador KNN ela foi incorretamente classificada 
+como \textit{english cocker spaniel}, enquanto que no teste com dataset total e classificador SVM ela não foi usada.
+
+\subsection{Tempos de execução}
+A tabela a seguir mostra o tempo de execução das diversas partes do algoritmo e a
+precisão geral dele para cada um dos testes. As colunas são:
+\begin{itemize}
+  \item \textbf{Classes}: Número de classes contidas nesse teste.
+  \item \textbf{Descs}: Tempo total que levou para calcular os descritores das imagens de treinamento, em segundos.
+  \item \textbf{KMeans}: Tempo que levou para executar o KMeans e clusterizar os descritores, em segundos.
+  \item \textbf{Hists}: Tempo total que levou para calcular os histogramas das imagens de treinamento, em segundos.
+  \item \textbf{Treino}: Tempo que levou para executar o treinamento do algoritmo, em segundos.
+  \item \textbf{Testes}: Tempo que levou para rodar os testes, em segundos.
+  \item \textbf{Total}: Tempo total de execução do programa, em segundos.
+  \item \textbf{AT}: Porcentagem geral de acertos dos testes (juntando todos os testes, de todas classes).
+\end{itemize}
+\begin{tabular}{ | l | c | c | c | c | c | c | c | r | }
 \hline
-Teste       & Leitura & Etapa 1 & Etapa 2 & Etapa 3 & Etapa 4 & Total \\
+Teste       & Classes & Descs & KMeans & Hists & Treino & Testes & Total & AT \\
 \hline
-\ref{errado} & 0.08 & N/A & 5.19 & 10.00 & 8.24 & 23.51 \\
+KNN & 10 & 109.11s & 1318.07s & 218.04s & 1645.69s & 188.11s & 1833.81s & 17.5\% \\
 \hline
-\ref{duasplacas} & 0.07 & N/A & 4.85 & 9.30 & 8.01 & 22.23 \\
+KNN\_sift\_tp05 & 3 & 84.27s & 1311.64s & 126.02s & 1522.08s & 86.05s & 1608.13s & 42.1\% \\
 \hline
-\ref{comenhance} & 0.07 & 31.41 & 4.52 & 8.86 & 8.86 & 53.73 \\
+KNN\_surf\_tp05 & 3 & 33.23s & 380.49s & 65.73s & 479.51s & 46.93s & 526.45s & 48.8\% \\
 \hline
-\ref{semenhance} & 0.0 & N/A & 4.38 & 8.73 & 7.59 & 20.70 \\
+SVM & 10 & 99.11s & 1373.76s & 259.89s & 1734.20s & 180.24s & 1914.45s & 26.0\% \\
+\hline
+SVM\_sift\_tp05 & 3 & 80.95s & 1169.20s & 112.32s & 1362.74s & 75.49s & 1438.25s & 52.1\% \\
+\hline
+SVM\_surf\_tp05 & 3 & 33.07s & 369.74s & 60.67s & 463.66s & 45.56s & 509.22s & 53.3\% \\
 \hline
 \end{tabular}
+
+\vspace{10pt}
+A tabela a seguir mostra a taxa de acerto de cada teste para cada classe. As classes
+estão indicadas como letras de A a J, que indicam, respectivamente, as classes 
+\textit{leonberger}, \textit{english setter}, \textit{pug}, \textit{basset hound}, \textit{saint bernard},
+\textit{beagle}, \textit{shiba inu}, \textit{english cocker spaniel}, \textit{great pyrenees}, \textit{newfoundland}.\\
+\begin{tabular}{ | l | c | c | c | c | c | c | c | c | c | c | }
+\hline
+Teste       & A & B & C & D & E & F & G & H & I & J \\
+\hline
+KNN & 8.8\% & 15.0\% & 8.8\% & 11.2\% & 26.2\% & 15.0\% & 17.5\% & 27.5\% & 35.0\% & 10.0\% \\
+\hline
+KNN\_sift\_tp05 & -- & -- & -- & -- & 50.0\% & 50.0\% & -- & -- & 26.2\% & -- \\
+\hline
+KNN\_surf\_tp05 & -- & -- & -- & -- & 48.8\% & 48.8\% & -- & -- & 48.8\% & -- \\
+\hline
+SVM & 27.5\% & 28.8\% & 31.2\% & 22.5\% & 25.0\% & 23.8\% & 22.5\% & 25.0\% & 28.8\% & 25.0\% \\
+\hline
+SVM\_sift\_tp05 & -- & -- & -- & -- & 56.2\% & 57.5\% & -- & -- & 42.5\% & -- \\
+\hline
+SVM\_surf\_tp05 & -- & -- & -- & -- & 56.2\% & 51.2\% & -- & -- & 52.5\% & -- \\
+\hline
+\end{tabular}
+
+
+\subsection{Conclusões}
+Achei que o algoritmo é simples de implementar assim como o artigo diz, mesmo sendo que
+no começo tive dificuldade em entender como gerar os histogramas para treinar o algoritmo...
+
+Em relação à eficiência do algoritmo, também achei de acordo com o que o artigo diz. Mas depende
+da escolha de classificador, extrator, e implementação do OpenCV. A implementação do OpenCV que
+usei tinha suporte a execução \textit{multi-thread} das classes e funções que usei (kmeans, classificadores
+e extratores). Isso acelerou bastante a execução do programa em relação a testes anteriores que fiz.
+
+Entre os classificadores KNN e SVM, o SVM aparenta ser um pouco mais rápido que o KNN, e definitivamente
+apresenta resultados mais precisos. Quanto aos extratores, o SURF não só é bem mais rápido que o SIFT,
+como também apresenta resultados melhores. Podemos ver essa diferença notável de velocidade entre os testes
+com dataset total e os com mini dataset com extrator SIFT. Os com dataset total estão usando 800 imagens 
+para treinamento, enquanto os com o mini estão usando 300, e ainda assim a diferença de tempo deles é pequena.
+Esses mesmos com SIFT e mini dataset levam quase três vezes mais que os com SURF.
+
+No geral, esperava que a precisão do algoritmo fosse melhor... Também estranhei a queda de precisão para os testes
+com mais classes. Acredito que nesses a perda de precisão se deve mais ao fato de ter 7 classes a mais do que 20
+imagens a menos para treinar cada classe. 
+
+Porém não posso afirmar com certeza que implementei o algoritmo exatamente como deveria ser para alcançar uma 
+precisão alta, ou que usei os paramêtros certos. Como também só testei com o mesmo dataset, não tenho como saber
+se esse dataset especificamente apresenta um desafio maior para o algoritmo de categorização visual.
+
 
 \end{document}
